@@ -7,17 +7,24 @@ using System.Text;
 
 namespace Playground
 {
-   static  class Program
+    static class Program
     {
         static void Main(string[] args)
         {
             var content = File.ReadAllText("request.txt");
+            content = content.Replace("&#", "|amp-dial|");
             var decoded = HttpUtility.UrlDecode(content, Encoding.UTF8);
 
             var x = decoded.Split("?");
+
             var uriObject = new Uri(decoded);
             var b = HttpUtility.ParseQueryString(uriObject.Query, Encoding.UTF8);
             var dict = b.ToDictionary();
+            foreach (var item in dict)
+            {
+                dict[item.Key] = item.Value.Replace("|amp-dial|", "&#");
+                Console.WriteLine(dict[item.Key]);
+            }
             Console.WriteLine();
         }
 
